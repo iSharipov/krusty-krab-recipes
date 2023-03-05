@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://127.0.0.1:5432/recipes
+    driverClassName: org.postgresql.Driver
+    username: postgres
+    password: postgres
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+      open-in-view: false
+    properties:
+      hibernate.id.new_generator_mappings: true
+      hibernate.generate_statistics: true
+      hibernate.show_sql: true
+      hibernate.format_sql: true
+      hibernate.jdbc.lob.non_contextual_creation: true
+  liquibase:
+    change-log: classpath:liquibase/master.xml

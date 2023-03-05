@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2023-03-04-recipes-0" author="ilia_sharipov">
+        <createTable tableName="recipe"
+                     remarks="Recipe table">
+            <column name="id"
+                    autoIncrement="true"
+                    type="serial"
+                    remarks="Id">
+                <constraints primaryKey="true"
+                             nullable="false"/>
+            </column>
+            <column name="name"
+                    type="varchar(1000)"
+                    remarks="Recipe name">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="description"
+                    type="text"
+                    remarks="Recipe description">
+            </column>
+            <column name="instructions"
+                    type="text"
+                    remarks="Recipe instructions">
+                <constraints nullable="false"/>
+            </column>
+            <column name="servings"
+                    type="int"
+                    remarks="Servings">
+                <constraints nullable="true"/>
+            </column>
+            <column name="vegetarian"
+                    type="boolean"
+                    remarks="Vegetarian recipe">
+                <constraints nullable="true"/>
+            </column>
+            <column name="removed"
+                    type="boolean"
+                    defaultValue="false"
+                    remarks="Has the recipe been deleted?">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>

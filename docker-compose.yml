@@ -1,0 +1,29 @@
+version: '3.8'
+services:
+  db:
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - PGDATA=/data/postgres
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres-db:/data/postgres
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - '8282:8282'
+    command:
+      - 'php'
+      - '-S'
+      - '[::]:8282'
+      - '-t'
+      - '/var/www/html'
+
+volumes:
+  postgres-db:
+    driver: local

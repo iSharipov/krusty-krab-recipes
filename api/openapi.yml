@@ -1,0 +1,141 @@
+openapi: 3.0.3
+info:
+  version: 1.0.0
+  title: Recipes API
+  description: Recipes API
+paths:
+  /recipes:
+    get:
+      description: Returns a list of recipes
+      responses:
+        200:
+          description: List of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipesResponse'
+    post:
+      description: Create recipe
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRecipeRequest'
+      responses:
+        200:
+          description: Recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
+
+  /recipes/{recipeId}:
+    get:
+      description: Returns recipe by id
+      parameters:
+        - in: path
+          name: recipeId
+          schema:
+            type: string
+          required: true
+          description: Recipe Id
+      responses:
+        200:
+          description: Recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
+    delete:
+      description: Returns recipe by id
+      parameters:
+        - in: path
+          name: recipeId
+          schema:
+            type: string
+          required: true
+          description: Recipe Id
+      responses:
+        204:
+          description: The resource was deleted successfully.
+  /recipes/search:
+    post:
+      description: Recipe search
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SearchCriteriaRequest'
+      responses:
+        200:
+          description: List of recipes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipesResponse'
+
+
+components:
+  schemas:
+    Recipe:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        instructions:
+          type: string
+        vegetarian:
+          type: boolean
+        servings:
+          type: integer
+        ingredients:
+          $ref: '#/components/schemas/Ingredients'
+    RecipeResponse:
+      allOf:
+        - $ref: '#/components/schemas/Recipe'
+        - type: object
+          properties:
+            id:
+              type: integer
+    RecipesResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/RecipeResponse'
+    Ingredients:
+      type: array
+      items:
+        $ref: '#/components/schemas/Ingredient'
+    Ingredient:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        amount:
+          type: number
+        unit:
+          type: string
+    CreateRecipeRequest:
+      allOf:
+        - $ref: '#/components/schemas/Recipe'
+    SearchCriteria:
+      type: object
+      properties:
+        filterKey:
+          type: string
+        value:
+          type: object
+        operation:
+          type: string
+        dataOption:
+          type: string
+    SearchCriteriaRequest:
+      type: array
+      items:
+        $ref: '#/components/schemas/SearchCriteria'
+      properties:
+        dataOption:
+          type: string

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<databaseChangeLog
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.5.xsd">
+
+    <changeSet id="2023-03-04-ingredients-0" author="ilia_sharipov">
+        <createTable tableName="ingredient"
+                     remarks="Ingredients table">
+            <column name="id"
+                    autoIncrement="true"
+                    type="serial"
+                    remarks="Id">
+                <constraints primaryKey="true"
+                             nullable="false"/>
+            </column>
+            <column name="name"
+                    type="varchar(1000)"
+                    remarks="Ingredient name">
+                <constraints nullable="false" unique="false"/>
+            </column>
+            <column name="description"
+                    type="text"
+                    remarks="Ingredient description">
+            </column>
+            <column name="amount"
+                    type="number"
+                    remarks="Amount">
+                <constraints nullable="true"/>
+            </column>
+            <column name="unit"
+                    type="varchar(255)"
+                    remarks="Unit">
+                <constraints nullable="true"/>
+            </column>
+            <column name="recipe_id"
+                    type="bigint"
+                    remarks="Recipe Id">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+</databaseChangeLog>
