@@ -1,5 +1,11 @@
 # Favourite recipes
 
+## Tech stack
+- Java 17
+- Spring Boot 3.0.4
+- PostgreSQL 
+- OpenAPI 3.0.3
+
 ## Installation
 1. Install Java 17 - https://adoptium.net/installation/
 2. Install PostgreSQL - https://www.postgresql.org/
