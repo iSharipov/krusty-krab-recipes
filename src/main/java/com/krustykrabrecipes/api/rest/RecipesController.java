@@ -3,6 +3,7 @@ package com.krustykrabrecipes.api.rest;
 import com.krustykrabrecipes.api.model.CreateRecipeRequest;
 import com.krustykrabrecipes.api.model.RecipeResponse;
 import com.krustykrabrecipes.api.model.SearchCriteria;
+import com.krustykrabrecipes.api.model.UpdateRecipeRequest;
 import com.krustykrabrecipes.search.RecipeSpecificationBuilder;
 import com.krustykrabrecipes.service.RecipesService;
 import lombok.AllArgsConstructor;
@@ -32,6 +33,11 @@ public class RecipesController implements RecipesApi {
     @Override
     public ResponseEntity<RecipeResponse> recipesPost(CreateRecipeRequest createRecipeRequest) {
         return ResponseEntity.ok(recipesService.createRecipe(createRecipeRequest));
+    }
+
+    @Override
+    public ResponseEntity<RecipeResponse> recipesRecipeIdPut(String recipeId, UpdateRecipeRequest updateRecipeRequest) {
+        return ResponseEntity.ok(recipesService.updateRecipe(recipeId, updateRecipeRequest));
     }
 
     @Override

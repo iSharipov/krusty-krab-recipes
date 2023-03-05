@@ -1,7 +1,9 @@
 package com.krustykrabrecipes.service;
 
 import com.krustykrabrecipes.api.model.CreateRecipeRequest;
+import com.krustykrabrecipes.api.model.IngredientUpdateRequest;
 import com.krustykrabrecipes.api.model.RecipeResponse;
+import com.krustykrabrecipes.api.model.UpdateRecipeRequest;
 import com.krustykrabrecipes.exception.RecipeNotFoundException;
 import com.krustykrabrecipes.model.Ingredient;
 import com.krustykrabrecipes.model.Recipe;
@@ -14,6 +16,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -42,6 +45,27 @@ public class RecipesService {
         List<Ingredient> persistedIngredients = ingredientRepository.saveAll(ingredients);
         recipe.setIngredients(persistedIngredients);
         return recipeMapper.toRecipe(recipe);
+    }
+
+    public RecipeResponse updateRecipe(String recipeId, UpdateRecipeRequest updateRecipeRequest) {
+        Recipe recipe = recipeRepository.findById(Long.parseLong(recipeId))
+                .orElseThrow(
+                        RecipeNotFoundException::new);
+        recipeMapper.updateRecipe(recipe, updateRecipeRequest);
+        recipeRepository.save(recipe);
+        recipe.getIngredients().forEach(ingredientModel ->
+                {
+                    Optional<IngredientUpdateRequest> first = updateRecipeRequest.getIngredients()
+                            .stream()
+                            .filter(ingredient -> ingredientModel.getId().equals(ingredient.getId()))
+                            .findFirst();
+                    first.ifPresent(ingredientUpdateRequest -> ingredientMapper.update(ingredientModel,
+                            ingredientUpdateRequest));
+                    ingredientRepository.save(ingredientModel);
+                }
+        );
+        return recipeMapper.toRecipe(recipeRepository.findById(Long.parseLong(recipeId))
+                .orElseThrow(RecipeNotFoundException::new));
     }
 
     public void deleteRecipe(String recipeId) {

@@ -1,6 +1,8 @@
 package com.krustykrabrecipes.api.rest;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.krustykrabrecipes.Application;
+import com.krustykrabrecipes.api.model.RecipeResponse;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -27,6 +30,8 @@ class RecipesControllerTest {
 
     @Autowired
     private MockMvc mvc;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Test
     void recipesGet() throws Exception {
@@ -35,7 +40,7 @@ class RecipesControllerTest {
                         .accept(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(3)));
+                .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(4)));
     }
 
     @Test
@@ -82,6 +87,29 @@ class RecipesControllerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$", hasSize(1)));
     }
 
+    @Test
+    void recipesRecipeIdPut() throws Exception {
+        MvcResult mvcResult = mvc.perform(MockMvcRequestBuilders
+                        .post("/recipes")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(recipe()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andReturn();
+        var postResult = mvcResult.getResponse().getContentAsString();
+        var recipeResponse = objectMapper.readValue(postResult, RecipeResponse.class);
+
+        mvc.perform(MockMvcRequestBuilders
+                        .put("/recipes/" + recipeResponse.getId())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON)
+                        .content(updateRecipe()))
+                .andDo(print())
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.ingredients[0].name").value("tomato"));
+    }
+
     private String recipe() {
         return """
                 {
@@ -95,6 +123,25 @@ class RecipesControllerTest {
                       "description": "fresh",
                       "unit": "kg",
                       "amount": 1
+                    }
+                  ]
+                }""";
+    }
+
+    private String updateRecipe() {
+        return """
+                {
+                  "name": "soup",
+                  "instructions": "cook",
+                  "vegetarian": false,
+                  "servings": 2,
+                  "ingredients": [
+                    {
+                      "id": 1,
+                      "name": "tomato",
+                      "description": "dried",
+                      "unit": "kg",
+                      "amount": 2
                     }
                   ]
                 }""";

@@ -46,6 +46,28 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/RecipeResponse'
+
+    put:
+      description: Modify recipe by id
+      parameters:
+        - in: path
+          name: recipeId
+          schema:
+            type: string
+          required: true
+          description: Recipe Id
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateRecipeRequest'
+      responses:
+        200:
+          description: Recipe
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecipeResponse'
     delete:
       description: Returns recipe by id
       parameters:
@@ -99,6 +121,9 @@ components:
           properties:
             id:
               type: integer
+              format: int64
+            ingredients:
+              $ref: '#/components/schemas/IngredientsResponse'
     RecipesResponse:
       type: array
       items:
@@ -118,9 +143,37 @@ components:
           type: number
         unit:
           type: string
+    IngredientsResponse:
+      type: array
+      items:
+        $ref: '#/components/schemas/IngredientResponse'
+    IngredientResponse:
+      allOf:
+        - $ref: '#/components/schemas/Ingredient'
+      properties:
+        id:
+          type: integer
+          format: int64
+    IngredientsUpdateRequest:
+      type: array
+      items:
+        $ref: '#/components/schemas/IngredientUpdateRequest'
+    IngredientUpdateRequest:
+      allOf:
+        - $ref: '#/components/schemas/Ingredient'
+      properties:
+        id:
+          type: integer
+          format: int64
     CreateRecipeRequest:
       allOf:
         - $ref: '#/components/schemas/Recipe'
+    UpdateRecipeRequest:
+      allOf:
+        - $ref: '#/components/schemas/Recipe'
+      properties:
+        ingredients:
+          $ref: '#/components/schemas/IngredientsUpdateRequest'
     SearchCriteria:
       type: object
       properties:
